@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Tugas Soal TP - V2 Futuristic</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Library untuk Export Excel dan PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --neon-blue: #00f2fe;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: radial-gradient(circle at top left, #1a233a, var(--bg-color));
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+            margin-bottom: 30px;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 400;
+            border: 1px solid transparent;
+        }
+
+        .tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            color: #fff;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0px 2px 10px rgba(0, 242, 254, 0.1);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Glassmorphism Card */
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: var(--neon-blue);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        p { color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00c6fb 0%, #005bea 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 198, 251, 0.4);
+        }
+
+        .btn-success { background: linear-gradient(45deg, #11998e 0%, #38ef7d 100%); color: #fff; }
+        .btn-danger { background: linear-gradient(45deg, #ff416c 0%, #ff4b2b 100%); color: #fff; }
+        .btn-warning { background: linear-gradient(45deg, #f7971e 0%, #ffd200 100%); color: #000; }
+
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--neon-blue);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        tr:hover td {
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        hr { border: 0; height: 1px; background: var(--border-color); margin: 25px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>System Generator TP</h2>
+
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('tab-sekolah', this)">Data Sekolah</div>
+            <div class="tab" onclick="openTab('tab-tp', this)">Data TP per Kelas</div>
+            <div class="tab" onclick="openTab('tab-hasil', this)">Hasil Pembagian</div>
+        </div>
+
+        <!-- TAB 1: Input Sekolah -->
+        <div id="tab-sekolah" class="tab-content active">
+            <p>Masukkan nama sekolah (pisahkan dengan baris baru / enter):</p>
+            <textarea id="input-sekolah" placeholder="SDN 1 Cyber Jakarta&#10;SDN 2 Alpha Nusantara&#10;SDN 3 Nexus"></textarea>
+        </div>
+
+        <!-- TAB 2: Input TP -->
+        <div id="tab-tp" class="tab-content">
+            <p>Masukkan Tujuan Pembelajaran (TP) tiap kelas (pisahkan dengan baris baru):</p>
+            
+            <label>KELAS 1</label>
+            <textarea id="tp-1" placeholder="TP 1.1 Matematika&#10;TP 1.2 Bahasa Indonesia"></textarea>
+
+            <label>KELAS 2</label>
+            <textarea id="tp-2"></textarea>
+
+            <label>KELAS 3</label>
+            <textarea id="tp-3"></textarea>
+
+            <label>KELAS 4</label>
+            <textarea id="tp-4"></textarea>
+
+            <label>KELAS 5</label>
+            <textarea id="tp-5"></textarea>
+        </div>
+
+        <!-- TAB 3: Hasil -->
+        <div id="tab-hasil" class="tab-content">
+            <button class="btn-primary" onclick="generateTugas()">⚙️ Generate Pembagian</button>
+            <hr>
+            <div id="action-buttons" style="display: none; margin-bottom: 15px;">
+                <button class="btn-success" onclick="exportExcel()">⬇ Excel</button>
+                <button class="btn-danger" onclick="exportPDF()">⬇ PDF</button>
+                <button class="btn-warning" id="btn-save-sheet" onclick="saveToSheets()">☁ Save to Cloud</button>
+            </div>
+            
+            <table id="tabel-hasil">
+                <thead>
+                    <tr>
+                        <th>Sekolah</th>
+                        <th>Kelas</th>
+                        <th>Tugas TP (Maks 3)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Hasil baris tabel di-generate di sini -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ==============================================================================
+        // ⬇️ MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI BARIS BAWAH INI ⬇️
+        // ==============================================================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxibDHpCZGk-IoD1YoXSZQOBgq4Pc3o9nwubmWPhf8XxOzKzI-BZXbL2j1naJc1qTue8g/exec"; 
+        // ==============================================================================
+        
+        let hasilData = [];
+
+        function openTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            el.classList.add('active');
+        }
+
+        function generateTugas() {
+            const sekolahList = document.getElementById('input-sekolah').value.split('\n').map(s => s.trim()).filter(s => s !== "");
+            if (sekolahList.length === 0) {
+                alert("Sistem Menolak: Mohon isi data sekolah terlebih dahulu!");
+                return;
+            }
+
+            const tbody = document.querySelector('#tabel-hasil tbody');
+            tbody.innerHTML = "";
+            hasilData = [];
+
+            // Algoritma Pembagian Proporsional
+            for (let kelas = 1; kelas <= 5; kelas++) {
+                const tpList = document.getElementById(`tp-${kelas}`).value.split('\n').map(t => t.trim()).filter(t => t !== "");
+                let tpIndex = 0;
+
+                for (let i = 0; i < sekolahList.length; i++) {
+                    let sekolah = sekolahList[i];
+                    let tugasTP = [];
+                    
+                    for (let j = 0; j < 3; j++) {
+                        if (tpIndex < tpList.length) {
+                            tugasTP.push(tpList[tpIndex]);
+                            tpIndex++;
+                        }
+                    }
+
+                    if (tugasTP.length > 0) {
+                        hasilData.push({ sekolah: sekolah, kelas: `Kelas ${kelas}`, tp: tugasTP.join(" | ") });
+                        
+                        let tr = document.createElement("tr");
+                        tr.innerHTML = `<td>${sekolah}</td><td>Kelas ${kelas}</td><td>${tugasTP.join(" <br> ")}</td>`;
+                        tbody.appendChild(tr);
+                    }
+                }
+            }
+
+            if(hasilData.length > 0) {
+                document.getElementById('action-buttons').style.display = "block";
+            } else {
+                alert("Tidak ada data TP yang dimasukkan.");
+            }
+        }
+
+        function exportExcel() {
+            let ws = XLSX.utils.json_to_sheet(hasilData);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Tugas");
+            XLSX.writeFile(wb, "Data_Tugas_Soal.xlsx");
+        }
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Laporan Pembagian Tugas Penulisan Soal", 14, 15);
+            
+            let data = hasilData.map(row => [row.sekolah, row.kelas, row.tp.replace(/ \| /g, '\n')]);
+            doc.autoTable({
+                head: [['Sekolah', 'Kelas', 'Tugas TP']],
+                body: data,
+                startY: 20,
+                theme: 'grid',
+                styles: { fontSize: 10, cellPadding: 3 }
+            });
+            doc.save("Data_Tugas_Soal.pdf");
+        }
+
+        function saveToSheets() {
+            if(SCRIPT_URL === "MASUKKAN_URL_WEB_APP_ANDA_DISINI") {
+                alert("Sistem Gagal: Anda belum memasukkan URL Google Apps Script ke dalam kode sumber.");
+                return;
+            }
+            
+            const btnSave = document.getElementById('btn-save-sheet');
+            btnSave.innerText = "☁ Mengirim Data...";
+            btnSave.style.opacity = "0.7";
+            
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify(hasilData),
+                headers: { "Content-Type": "text/plain;charset=utf-8" }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    alert("Data berhasil tersinkronisasi ke Google Spreadsheet!");
+                } else {
+                    alert("Gagal sinkronisasi data.");
+                }
+            })
+            .catch(error => alert("Koneksi Error: " + error))
+            .finally(() => {
+                btnSave.innerText = "☁ Save to Cloud";
+                btnSave.style.opacity = "1";
+            });
+        }
+    </script>
+</body>
+</html>
