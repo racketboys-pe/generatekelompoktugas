@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Tugas Soal TP - V2 Futuristic</title>
+    <title>Generator Tugas Soal TP - Premium Edition</title>
     
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -16,9 +16,10 @@
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --neon-blue: #00f2fe;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --royal-blue: #2563eb; /* Warna dominan bernuansa biru royal */
+            --royal-blue-glow: rgba(37, 99, 235, 0.5);
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
         }
@@ -27,7 +28,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 40px 20px;
-            background: radial-gradient(circle at top left, #1a233a, var(--bg-color));
+            background: radial-gradient(circle at top center, #1e293b, var(--bg-color));
             color: var(--text-main);
             min-height: 100vh;
         }
@@ -44,7 +45,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: #fff;
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+            text-shadow: 0 0 12px var(--royal-blue-glow);
             margin-bottom: 30px;
         }
 
@@ -77,16 +78,16 @@
             color: #fff;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            box-shadow: inset 0px 2px 10px rgba(0, 242, 254, 0.1);
-            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+            box-shadow: inset 0px 2px 10px rgba(37, 99, 235, 0.2);
+            text-shadow: 0 0 8px var(--royal-blue-glow);
         }
 
         /* Glassmorphism Card */
         .tab-content {
             display: none;
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 30px;
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -108,9 +109,10 @@
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
-            color: var(--neon-blue);
+            color: #60a5fa;
             font-size: 14px;
             letter-spacing: 1px;
+            font-weight: 600;
         }
 
         p { color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
@@ -118,7 +120,7 @@
         textarea {
             width: 100%;
             height: 100px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px;
@@ -131,8 +133,8 @@
 
         textarea:focus {
             outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            border-color: var(--royal-blue);
+            box-shadow: 0 0 15px var(--royal-blue-glow);
         }
 
         /* Buttons */
@@ -152,18 +154,18 @@
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, #00c6fb 0%, #005bea 100%);
+            background: linear-gradient(45deg, #1d4ed8 0%, #3b82f6 100%);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 198, 251, 0.4);
+            box-shadow: 0 4px 15px var(--royal-blue-glow);
         }
 
-        .btn-success { background: linear-gradient(45deg, #11998e 0%, #38ef7d 100%); color: #fff; }
-        .btn-danger { background: linear-gradient(45deg, #ff416c 0%, #ff4b2b 100%); color: #fff; }
-        .btn-warning { background: linear-gradient(45deg, #f7971e 0%, #ffd200 100%); color: #000; }
+        .btn-success { background: linear-gradient(45deg, #059669 0%, #10b981 100%); color: #fff; }
+        .btn-danger { background: linear-gradient(45deg, #e11d48 0%, #f43f5e 100%); color: #fff; }
+        .btn-warning { background: linear-gradient(45deg, #d97706 0%, #fbbf24 100%); color: #000; }
 
         button:hover {
             transform: translateY(-2px);
-            filter: brightness(1.1);
+            filter: brightness(1.15);
         }
 
         /* Table Styling */
@@ -180,17 +182,19 @@
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            line-height: 1.5;
         }
 
         th {
             background: rgba(255, 255, 255, 0.05);
-            color: var(--neon-blue);
+            color: #60a5fa;
             font-weight: 600;
             letter-spacing: 1px;
         }
 
         tr:hover td {
-            background: rgba(0, 242, 254, 0.05);
+            background: rgba(37, 99, 235, 0.1);
         }
 
         hr { border: 0; height: 1px; background: var(--border-color); margin: 25px 0; }
@@ -210,7 +214,7 @@
         <!-- TAB 1: Input Sekolah -->
         <div id="tab-sekolah" class="tab-content active">
             <p>Masukkan nama sekolah (pisahkan dengan baris baru / enter):</p>
-            <textarea id="input-sekolah" placeholder="SDN 1 Cyber Jakarta&#10;SDN 2 Alpha Nusantara&#10;SDN 3 Nexus"></textarea>
+            <textarea id="input-sekolah" placeholder="SDN Ulujami 01&#10;SDN Ulujami 02&#10;SDN Ulujami 06 Pagi"></textarea>
         </div>
 
         <!-- TAB 2: Input TP -->
@@ -218,7 +222,7 @@
             <p>Masukkan Tujuan Pembelajaran (TP) tiap kelas (pisahkan dengan baris baru):</p>
             
             <label>KELAS 1</label>
-            <textarea id="tp-1" placeholder="TP 1.1 Matematika&#10;TP 1.2 Bahasa Indonesia"></textarea>
+            <textarea id="tp-1" placeholder="TP 1.1 Memahami pola gerak dasar lokomotor&#10;TP 1.2 Mempraktikkan gerak dasar non-lokomotor"></textarea>
 
             <label>KELAS 2</label>
             <textarea id="tp-2"></textarea>
@@ -237,6 +241,8 @@
         <div id="tab-hasil" class="tab-content">
             <button class="btn-primary" onclick="generateTugas()">⚙️ Generate Pembagian</button>
             <hr>
+            
+            <!-- Tombol Export muncul setelah klik Generate -->
             <div id="action-buttons" style="display: none; margin-bottom: 15px;">
                 <button class="btn-success" onclick="exportExcel()">⬇ Excel</button>
                 <button class="btn-danger" onclick="exportPDF()">⬇ PDF</button>
@@ -262,7 +268,7 @@
         // ==============================================================================
         // ⬇️ MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI BARIS BAWAH INI ⬇️
         // ==============================================================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxibDHpCZGk-IoD1YoXSZQOBgq4Pc3o9nwubmWPhf8XxOzKzI-BZXbL2j1naJc1qTue8g/exec"; 
+        const SCRIPT_URL = "MASUKKAN_URL_WEB_APP_ANDA_DISINI"; 
         // ==============================================================================
         
         let hasilData = [];
@@ -285,27 +291,34 @@
             tbody.innerHTML = "";
             hasilData = [];
 
-            // Algoritma Pembagian Proporsional
+            // Algoritma Pembagian Proporsional (Berulang/Looping)
             for (let kelas = 1; kelas <= 5; kelas++) {
                 const tpList = document.getElementById(`tp-${kelas}`).value.split('\n').map(t => t.trim()).filter(t => t !== "");
-                let tpIndex = 0;
+                
+                // Lewati kelas ini jika tidak ada TP yang diinputkan
+                if (tpList.length === 0) continue; 
+
+                let tpIndex = 0; // Indeks awal TP
+                
+                // Cek agar tidak memaksakan 3 TP jika jumlah TP yang diinput kurang dari 3
+                let maxTugasPerSekolah = Math.min(3, tpList.length);
 
                 for (let i = 0; i < sekolahList.length; i++) {
                     let sekolah = sekolahList[i];
                     let tugasTP = [];
                     
-                    for (let j = 0; j < 3; j++) {
-                        if (tpIndex < tpList.length) {
-                            tugasTP.push(tpList[tpIndex]);
-                            tpIndex++;
-                        }
+                    // Mengambil TP maksimal 3 (atau sesuai jumlah TP jika kurang dari 3)
+                    for (let j = 0; j < maxTugasPerSekolah; j++) {
+                        // Menggunakan modulo (%) agar index kembali ke 0 jika sudah mencapai batas akhir TP
+                        tugasTP.push(tpList[tpIndex % tpList.length]);
+                        tpIndex++;
                     }
 
                     if (tugasTP.length > 0) {
                         hasilData.push({ sekolah: sekolah, kelas: `Kelas ${kelas}`, tp: tugasTP.join(" | ") });
                         
                         let tr = document.createElement("tr");
-                        tr.innerHTML = `<td>${sekolah}</td><td>Kelas ${kelas}</td><td>${tugasTP.join(" <br> ")}</td>`;
+                        tr.innerHTML = `<td>${sekolah}</td><td>Kelas ${kelas}</td><td>${tugasTP.join(" <br><br> ")}</td>`;
                         tbody.appendChild(tr);
                     }
                 }
@@ -330,13 +343,16 @@
             const doc = new jsPDF();
             doc.text("Laporan Pembagian Tugas Penulisan Soal", 14, 15);
             
-            let data = hasilData.map(row => [row.sekolah, row.kelas, row.tp.replace(/ \| /g, '\n')]);
+            let data = hasilData.map(row => [row.sekolah, row.kelas, row.tp.replace(/ \| /g, '\n\n')]);
             doc.autoTable({
                 head: [['Sekolah', 'Kelas', 'Tugas TP']],
                 body: data,
                 startY: 20,
                 theme: 'grid',
-                styles: { fontSize: 10, cellPadding: 3 }
+                styles: { fontSize: 10, cellPadding: 4 },
+                columnStyles: {
+                    2: { cellWidth: 100 } // Memastikan kolom TP cukup lebar agar rapi
+                }
             });
             doc.save("Data_Tugas_Soal.pdf");
         }
